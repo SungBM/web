@@ -1,0 +1,41 @@
+1. DAO를 없애고 Mapper 인터페이스를 이용해서 처리해 봅니다.
+	(1) Mapper 인터페이스란 매퍼 파일에 기재된 SQL을 호출하기 위한 인터페이스입니다.
+		MyBatis-Spring은 Mapper 인터페이스를 이용해서 실제 sql 처리가 되는 클래스를 자동으로 생성합니다.
+		
+		예)
+			① dao.getListCount()의 호출합니다.
+			@Service
+			 public class BoardServiceImpl implements BoardService{
+				 private BoardMapper dao;
+	
+			@Autowired
+			public BoardServiceImpl(BoardMapper dao) {	//다오를 참조하여 사용
+				this.dao = dao;
+			}
+			
+			@Override
+			public int getListCount() {
+				return dao.getListCount(); //다오 호출해서 리스트 몇갠지 알려줘. 가공할 데이터 없으면 바로 리턴.
+			}
+			
+			② 아래 BoardMapper의 getListCount()이 호출되고 이것은 매퍼 파일의 메서드명과 일치하는 아이디를 갖는 쿼리문을 호출합니다.
+			public interface BoardMapper{
+				
+				//글의 갯수 구하기
+				public int getListCount();
+			}
+			
+			<!-- 1. 태그에 id속성은 Mapper인터페이스에 추가한 메서드명과 동일하게 작성됩니다.
+				 2. resultType속성은 연동시킬 메서드에 명시된 반환 타입을 작성해줍니다. -->
+				 
+				 <select id="count" resultType="int">
+				   select count(*) from board
+				 </select>
+				 
+			③ <!-- Mapper 인터페이스가 있는 곳의 패키지명과 이름을 namespace로 설정합니다. -->
+				<mapper namespace="com.naver.myhome4.mapper.BoardMapper">
+				
+	(2) 이전 호출 방식) dao.selectOne(매퍼파일네임스페이스.아이디, 매개변수)
+					변경 방식)
+					① 매퍼파일네임스페이스.아이디에 해당 Mapper 인터페이스 안에 메서드가 존재하면 됩니다.
+					② 매퍼파일네임스페이스는 Mapper 인터페이스가 있는 곳의 패키지명과 이름으로 작성하면 됩니다.
