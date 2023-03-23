@@ -17,7 +17,7 @@ pipeline {
          
         stage('Build') {
             steps {    
-                      dir("Spring10_Security_War"){  ////clone 받은 프로젝트 안의 Spring10_Security_War 디렉토리에서 stage 실행     
+                      dir("Spring_Security_War"){  ////clone 받은 프로젝트 안의 Spring10_Security_War 디렉토리에서 stage 실행     
                            sh "mvn -Dmaven.test.failure.ignore=true clean compile package"
                     }  
             }
